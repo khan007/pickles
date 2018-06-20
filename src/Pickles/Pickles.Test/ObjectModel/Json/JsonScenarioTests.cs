@@ -41,7 +41,7 @@ namespace PicklesDoc.Pickles.Test.ObjectModel.Json
                                   FeatureElements = { new Scenario { Name = "My Feature" } }
                               };
 
-            var mapper = new JsonMapper();
+            var mapper = new JsonMapper(new LanguageServicesRegistry());
 
             var mappedFeature = mapper.Map(feature);
 
@@ -49,7 +49,7 @@ namespace PicklesDoc.Pickles.Test.ObjectModel.Json
 
             var mappedScenario = mappedFeature.FeatureElements[0] as JsonScenario;
 
-            Check.That(mappedScenario.Feature).IsSameReferenceThan(mappedFeature);
+            Check.That(mappedScenario.Feature).IsSameReferenceAs(mappedFeature);
         }
 
     }

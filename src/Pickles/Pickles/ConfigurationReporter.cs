@@ -36,11 +36,15 @@ namespace PicklesDoc.Pickles
             writeToLog($"Incorporate Test Results?      : {(configuration.HasTestResults ? "Yes" : "No")}");
             writeToLog($"Include Experimental Features? : {(configuration.ShouldIncludeExperimentalFeatures ? "Yes" : "No")}");
             writeToLog($"Exclude Tag                    : {configuration.ExcludeTags}");
+            writeToLog($"Technical Tag                    : {configuration.HideTags}");
 
             if (configuration.HasTestResults)
             {
-                writeToLog($"Test Result Format        : {configuration.TestResultsFormat}");
-                writeToLog($"Test Result File          : {configuration.TestResultsFile.FullName}");
+            writeToLog($"Test Result Format             : {configuration.TestResultsFormat}");
+                foreach (var testResultsFile in configuration.TestResultsFiles)
+                {
+            writeToLog($"Test Result File               : {testResultsFile.FullName}");
+                }
             }
         }
     }

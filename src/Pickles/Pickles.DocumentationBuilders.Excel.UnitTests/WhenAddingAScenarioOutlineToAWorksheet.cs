@@ -41,10 +41,10 @@ namespace PicklesDoc.Pickles.DocumentationBuilders.Excel.UnitTests
         public void ThenSingleScenarioOutlineAddedSuccessfully()
         {
             var excelScenarioFormatter = Container.Resolve<ExcelScenarioOutlineFormatter>();
-            var exampleTable = new Table();
+            var exampleTable = new ExampleTable();
             exampleTable.HeaderRow = new TableRow("Var1", "Var2", "Var3", "Var4");
             exampleTable.DataRows =
-                new List<TableRow>(new[] { new TableRow("1", "2", "3", "4"), new TableRow("5", "6", "7", "8") });
+                new List<TableRow>(new[] { new TableRowWithTestResult("1", "2", "3", "4"), new TableRowWithTestResult("5", "6", "7", "8") });
             var example = new Example { Name = "Examples", Description = string.Empty, TableArgument = exampleTable };
             var examples = new List<Example>();
             examples.Add(example);
@@ -87,10 +87,10 @@ namespace PicklesDoc.Pickles.DocumentationBuilders.Excel.UnitTests
         public void ThenSingleScenarioOutlineWithStepsAddedSuccessfully()
         {
             var excelScenarioFormatter = Container.Resolve<ExcelScenarioOutlineFormatter>();
-            var exampleTable = new Table();
+            var exampleTable = new ExampleTable();
             exampleTable.HeaderRow = new TableRow("Var1", "Var2", "Var3", "Var4");
             exampleTable.DataRows =
-                new List<TableRow>(new[] { new TableRow("1", "2", "3", "4"), new TableRow("5", "6", "7", "8") });
+                new List<TableRow>(new[] { new TableRowWithTestResult("1", "2", "3", "4"), new TableRowWithTestResult("5", "6", "7", "8") });
             var example = new Example { Name = "Examples", Description = string.Empty, TableArgument = exampleTable };
             var examples = new List<Example>();
             examples.Add(example);
@@ -129,6 +129,48 @@ namespace PicklesDoc.Pickles.DocumentationBuilders.Excel.UnitTests
                 Check.That(worksheet.Cell("G12").Value).IsEqualTo(8.0);
                 Check.That(row).IsEqualTo(13);
             }
+        }
+
+        [Test]
+        public void ThenDutchScenarioWithScenarioOutlineContainsVoorbeelden()
+        {
+            var scenarioOutline = SetupScenarioOutline();
+
+            scenarioOutline.Feature = new Feature { Language = "nl" };
+
+            var excelScenarioFormatter = Container.Resolve<ExcelScenarioOutlineFormatter>();
+
+
+            using (var workbook = new XLWorkbook())
+            {
+                IXLWorksheet worksheet = workbook.AddWorksheet("SHEET1");
+                int row = 3;
+                excelScenarioFormatter.Format(worksheet, scenarioOutline, ref row);
+
+                Check.That(worksheet.Cell("B5").Value).IsEqualTo("Voorbeelden");
+            }
+        }
+
+        private static ScenarioOutline SetupScenarioOutline()
+        {
+            var scenarioOutline = new ScenarioOutline
+            {
+                Name = "Test Feature",
+                Examples = new List<Example>
+                {
+                    new Example
+                    {
+                        Name = "Examples",
+                        Description = string.Empty,
+                        TableArgument = new ExampleTable
+                        {
+                            HeaderRow = new TableRow(),
+                            DataRows = new List<TableRow>()
+                        }
+                    }
+                },
+            };
+            return scenarioOutline;
         }
     }
 }

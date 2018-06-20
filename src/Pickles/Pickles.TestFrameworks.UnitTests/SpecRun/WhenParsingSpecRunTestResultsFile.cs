@@ -130,11 +130,24 @@ namespace PicklesDoc.Pickles.TestFrameworks.UnitTests.SpecRun
           base.ThenCanReadResultOfScenarioOutlineWithUmlauts();
         }
 
+        [Test]
+        public new void ThenCanReadResultOfScenarioWithDanishCharacters()
+        {
+            base.ThenCanReadResultOfScenarioWithDanishCharacters();
+        }
+
+
         //SpecRun-Output does not encode & so it can not be read as xml
         //[Test]
         //public new void ThenCanReadResultOfScenarioOutlineWithAmpersand()
         //{
         //  base.ThenCanReadResultOfScenarioOutlineWithAmpersand();
         //}
+
+        [Test]
+        public new void ThenCanReadResultOfScenarioWithSpanishCharacters()
+        {
+            base.ThenCanReadResultOfScenarioWithSpanishCharacters();
+        }
     }
 }

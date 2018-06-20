@@ -1,4 +1,4 @@
-Then(/^passing step$/) do
+﻿Then(/^passing step$/) do
   # Nothing to be done here
 end
 

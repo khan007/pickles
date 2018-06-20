@@ -31,13 +31,15 @@ namespace PicklesDoc.Pickles.Test.ObjectModel
 
         internal Mapper CreateMapper(string defaultLanguage = "en")
         {
-            var mapper = new Mapper(defaultLanguage);
+            var mapper = this.CreateMapper(new Configuration(), defaultLanguage);
+
             return mapper;
         }
 
         internal Mapper CreateMapper(IConfiguration configuration, string defaultLanguage = "en")
         {
-            var mapper = new Mapper(configuration, defaultLanguage);
+            var languageServices = new LanguageServices(defaultLanguage);
+            var mapper = new Mapper(configuration, languageServices);
             return mapper;
         }
 
@@ -153,14 +155,14 @@ My doc string line 2");
             return background;
         }
 
-        internal G.GherkinDocument CreateGherkinDocument(string name, string description, string[] tags = null, G.Background background = null, G.ScenarioDefinition[] scenarioDefinitions = null, G.Comment[] comments = null, G.Location location = null)
+        internal G.GherkinDocument CreateGherkinDocument(string name, string description, string[] tags = null, G.Background background = null, G.ScenarioDefinition[] scenarioDefinitions = null, G.Comment[] comments = null, G.Location location = null, string language = null)
         {
             var nonNullScenarioDefinitions = scenarioDefinitions ?? new G.ScenarioDefinition[0];
             return new G.GherkinDocument(
                 new G.Feature(
                     (tags ?? new string[0]).Select(this.CreateTag).ToArray(),
                     location,
-                    null,
+                    language,
                     "Feature",
                     name,
                     description,

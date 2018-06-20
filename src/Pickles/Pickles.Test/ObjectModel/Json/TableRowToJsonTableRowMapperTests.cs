@@ -33,14 +33,18 @@ namespace PicklesDoc.Pickles.Test.ObjectModel.Json
         [Test]
         public void Map_NullTableRow_ReturnsNull()
         {
-            var mapper = CreateMapper();
-
-            JsonTableRow actual = mapper.Map((TableRow) null);
+            var mapper = CreateTableRowMapper();
+            var actual = mapper.Map((TableRow) null);
 
             Check.That(actual).IsNull();
         }
 
-        private static TableRowToJsonTableRowMapper CreateMapper()
+        private static TableRowToJsonTableHeaderMapper CreateTableHeaderMapper()
+        {
+            return new TableRowToJsonTableHeaderMapper();
+        }
+
+        private static TableRowToJsonTableRowMapper CreateTableRowMapper()
         {
             return new TableRowToJsonTableRowMapper();
         }
@@ -48,47 +52,80 @@ namespace PicklesDoc.Pickles.Test.ObjectModel.Json
         [Test]
         public void Map_TableRowWithResult_ReturnsObjectWithResult()
         {
-            var tableRow = new TableRow { Result = TestResult.Passed };
+            var tableRow = new TableRowWithTestResult { Result = TestResult.Passed };
+            var mapper = CreateTableRowMapper();
+            var actual = mapper.MapwWithTestResult(tableRow) as JsonTableRowWithTestResult;
 
-            var mapper = CreateMapper();
-
-            var actual = mapper.Map(tableRow);
-
+            Check.That(actual != null);
             Check.That(actual.Result.WasExecuted).IsTrue();
             Check.That(actual.Result.WasSuccessful).IsTrue();
+        }
+
+        [Test]
+        public void Map_TableRow_ReturnsObject()
+        {
+            var tableRow = new TableRowWithTestResult { Result = TestResult.Passed };
+            var mapper = CreateTableRowMapper();
+
+            var actual = mapper.Map(tableRow) as JsonTableRowWithTestResult;
+
+            Check.That(actual == null);
         }
 
         [Test]
         public void Map_TableRowWithRows_ReturnsObjectWithStrings()
         {
             var tableRow = new TableRow("first string", "second string", "third string");
-
-            var mapper = CreateMapper();
-
+            var mapper = CreateTableRowMapper();
             var actual = mapper.Map(tableRow);
 
-            Check.That(actual).ContainsExactly("first string", "second string", "third string");
+            Check.That(actual).Contains("first string", "second string", "third string");
+            Check.That(actual != null);
         }
+
+        [Test]
+        public void Map_TableRowWithTestResultsWithRows_ReturnsObjectWithStrings()
+        {
+            var tableRow = new TableRowWithTestResult("first string", "second string", "third string");
+            var mapper = CreateTableRowMapper();
+            var actual = mapper.MapwWithTestResult(tableRow) as JsonTableRowWithTestResult;
+
+            Check.That(actual != null);
+            Check.That(actual).Contains("first string", "second string", "third string");
+            Check.That(actual.Result.WasExecuted).IsFalse();
+            Check.That(actual.Result.WasSuccessful).IsFalse();
+        }
+
         [Test]
         public void Map_TableRowWithCells_ConvertsToJsonTableRow()
         {
             var tableRow = new TableRow { Cells = { "cell 1", "cell 2" } };
-
-            var mapper = CreateMapper();
-
+            var mapper = CreateTableRowMapper();
             var jsonTableRow = mapper.Map(tableRow);
 
-            Check.That(jsonTableRow).ContainsExactly("cell 1", "cell 2");
+            Check.That(jsonTableRow).Contains("cell 1", "cell 2");
+
+            var actual = jsonTableRow as JsonTableRowWithTestResult;
+            Check.That(actual == null);
+        }
+
+        [Test]
+        public void Map_TableHeaderWithValues_ConvertsToJsonTableHeader()
+        {
+            var tableRow = new TableRow { Cells = { "Header 1", "Header 2" } };
+            var mapper = CreateTableHeaderMapper();
+            var jsonTableHeader = mapper.Map(tableRow);
+
+            Check.That(jsonTableHeader).Contains("Header 1", "Header 2");
         }
 
         [Test]
         public void Map_TableRowWithTestResult_ConvertsToJsonTableRowWithTestResult()
         {
-            var tableRow = new TableRow { Result = TestResult.Passed };
-
-            var mapper = CreateMapper();
-
-            var jsonTableRow = mapper.Map(tableRow);
+            var tableRow = new TableRowWithTestResult { Result = TestResult.Passed };
+            var mapper = CreateTableRowMapper();
+            var jsonTableRow = mapper.MapwWithTestResult(tableRow) as JsonTableRowWithTestResult;
+            Check.That(jsonTableRow != null);
 
             Check.That(jsonTableRow.Result.WasExecuted).IsEqualTo(true);
             Check.That(jsonTableRow.Result.WasSuccessful).IsEqualTo(true);

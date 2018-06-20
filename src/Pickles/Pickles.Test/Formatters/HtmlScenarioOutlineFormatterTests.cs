@@ -23,13 +23,12 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 
 using Autofac;
-using Moq;
 using NFluent;
+using NSubstitute;
 using NUnit.Framework;
 
 using PicklesDoc.Pickles.DocumentationBuilders.Html;
 using PicklesDoc.Pickles.ObjectModel;
-using PicklesDoc.Pickles.TestFrameworks;
 
 namespace PicklesDoc.Pickles.Test.Formatters
 {
@@ -41,14 +40,15 @@ namespace PicklesDoc.Pickles.Test.Formatters
         [SetUp]
         public void Setup()
         {
-            var fakeTestResults = new Mock<ITestResults>();
+            var fakeTestResults = Substitute.For<ITestResults>();
 
             this.formatter = new HtmlScenarioOutlineFormatter(
                 Container.Resolve<HtmlStepFormatter>(),
                 Container.Resolve<HtmlDescriptionFormatter>(),
                 Container.Resolve<HtmlTableFormatter>(),
                 Container.Resolve<HtmlImageResultFormatter>(),
-                fakeTestResults.Object);
+                fakeTestResults,
+                Container.Resolve<ILanguageServicesRegistry>());
         }
 
         #endregion
@@ -61,14 +61,14 @@ namespace PicklesDoc.Pickles.Test.Formatters
             examples.Add(new Example
             {
                 Description = "My Example Description",
-                TableArgument = new Table
+                TableArgument = new ExampleTable
                 {
                     HeaderRow = new TableRow("Cell1"),
                     DataRows =
                         new List<TableRow>(
                             new[]
                             {
-                                new TableRow("Value1")
+                                new TableRowWithTestResult("Value1")
                             })
                 },
             });

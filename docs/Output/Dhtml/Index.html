@@ -49,9 +49,9 @@
             <div data-bind="if: WasSuccessful"><span class="badge badge-success"><i class="icon-ok passed" title="Passed"></i></span></div>
             <div data-bind="if: !WasSuccessful"><span class="badge badge-important"><i class="icon-minus-sign failed" title="Failed"></i></span></div>
         </div>
-        <!--<div style="float: right" data-bind="if: !WasExecuted">
+        <div style="float: right" data-bind="if: !WasExecuted">
             <span class="badge badge-warning"><i class="icon-warning-sign inconclusive" title="Inconclusive"></i></span>
-        </div>-->
+        </div>
     </script>
 
     <script type="text/html" id="steps-template">
@@ -93,7 +93,14 @@
 
                     <tbody data-bind="foreach: DataRows, visible:IsShown">
                         <tr data-bind="foreach: $data">
-                            <td data-bind="text: $data"></td>
+                            <td>
+                                <div data-bind="if: typeof($data) === 'string'">
+                                    <div data-bind="text: $data"></div>
+                                </div>
+                                <div data-bind="if: typeof($data) === 'object'">
+                                    <div data-bind="template: { name: 'testResults-template', if: $data, data: $data }"></div>
+                                </div>						
+                            </td>
                         </tr>
                     </tbody>
 
@@ -202,7 +209,7 @@
                                           </span>
                                           </div>
                                           <div>
-                                              <strong>Examples:</strong> <span data-bind="text: Name"></span>
+                                              <strong><span data-bind="text: $data.NativeKeyword"></span>:</strong> <span data-bind="text: Name"></span>
                                           </div>
                                           <div class="description" data-bind="html: renderMarkdownBlock(Description)"></div>
                                           <div data-bind="template: { name: 'table-template', data: $data.TableArgument }"></div>

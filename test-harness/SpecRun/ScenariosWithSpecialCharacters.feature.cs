@@ -186,6 +186,34 @@ this.FeatureBackground();
             this.ThisIsAScenarioOutlineWithGermanUmlautsAouBAOU("pass_1", ((string[])(null)));
         }
         
+        [TechTalk.SpecRun.ScenarioAttribute("This is a scenario with danish characters æøå ÆØÅ", SourceLine=49)]
+        public virtual void ThisIsAScenarioWithDanishCharactersAEoaAEOA()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("This is a scenario with danish characters æøå ÆØÅ", ((string[])(null)));
+#line 50
+this.ScenarioSetup(scenarioInfo);
+#line 4
+this.FeatureBackground();
+#line 51
+  testRunner.Then("passing step", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [TechTalk.SpecRun.ScenarioAttribute("This is a scenario with spanish characters ñáéíóú", SourceLine=52)]
+        public virtual void ThisIsAScenarioWithSpanishCharactersNaeiou()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("This is a scenario with spanish characters ñáéíóú", ((string[])(null)));
+#line 53
+this.ScenarioSetup(scenarioInfo);
+#line 4
+this.FeatureBackground();
+#line 54
+  testRunner.Then("passing step", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
         [TechTalk.SpecRun.TestRunCleanup()]
         public virtual void TestRunCleanup()
         {

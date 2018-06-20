@@ -1,4 +1,4 @@
-//  --------------------------------------------------------------------------------------------------------------------
+﻿//  --------------------------------------------------------------------------------------------------------------------
 //  <copyright file="StandardTestSuite.cs" company="PicklesDoc">
 //  Copyright 2011 Jeffrey Cameron
 //  Copyright 2012-present PicklesDoc team and community contributors
@@ -276,11 +276,37 @@ namespace PicklesDoc.Pickles.TestFrameworks.UnitTests
 
           var feature = new Feature { Name = "Scenarios With Special Characters" };
 
-          var scenarioOutline = new ScenarioOutline { Name = "This is a scenario outline with german umlauts ���� ���", Feature = feature };
+          var scenarioOutline = new ScenarioOutline { Name = "This is a scenario outline with german umlauts äöüß ÄÖÜ", Feature = feature };
 
           var actualResult = results.GetExampleResult(scenarioOutline, new string[] { "pass_1" });
 
           Check.That(actualResult).IsEqualTo(TestResult.Passed);
+        }
+
+        public void ThenCanReadResultOfScenarioWithDanishCharacters()
+        {
+            var results = ParseResultsFile();
+
+            var feature = new Feature { Name = "Scenarios With Special Characters" };
+
+            var scenario = new Scenario { Name = "This is a scenario with danish characters æøå ÆØÅ", Feature = feature };
+
+            var actualResult = results.GetScenarioResult(scenario);
+
+            Check.That(actualResult).IsEqualTo(TestResult.Passed);
+        }
+
+        public void ThenCanReadResultOfScenarioWithSpanishCharacters()
+        {
+            var results = ParseResultsFile();
+
+            var feature = new Feature { Name = "Scenarios With Special Characters" };
+
+            var scenario = new Scenario { Name = "This is a scenario with spanish characters ñáéíóú", Feature = feature };
+
+            var actualResult = results.GetScenarioResult(scenario);
+
+            Check.That(actualResult).IsEqualTo(TestResult.Passed);
         }
 
         public void ThenCanReadResultOfScenarioOutlineWithAmpersand()

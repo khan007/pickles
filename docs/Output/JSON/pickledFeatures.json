@@ -528,24 +528,37 @@
                     [
                       "10",
                       "20",
-                      "30"
+                      "30",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ],
                     [
                       "20",
                       "20",
-                      "40"
+                      "40",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ],
                     [
                       "20",
                       "30",
-                      "50"
+                      "50",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ]
                   ]
                 },
                 "Tags": [
                   "@small",
                   "@short_test"
-                ]
+                ],
+                "NativeKeyword": "Examples"
               },
               {
                 "Name": "more than 100",
@@ -559,18 +572,27 @@
                     [
                       "100",
                       "20",
-                      "120"
+                      "120",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ],
                     [
                       "1000",
                       "20",
-                      "1020"
+                      "1020",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ]
                   ]
                 },
                 "Tags": [
                   "@big"
-                ]
+                ],
+                "NativeKeyword": "Examples"
               }
             ],
             "Name": "Add two positive numbers with many examples",
@@ -630,21 +652,34 @@
                     [
                       "10",
                       "20",
-                      "30"
+                      "30",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ],
                     [
                       "20",
                       "20",
-                      "40"
+                      "40",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ],
                     [
                       "20",
                       "30",
-                      "50"
+                      "50",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ]
                   ]
                 },
-                "Tags": []
+                "Tags": [],
+                "NativeKeyword": "Examples"
               },
               {
                 "Name": "more than 100",
@@ -658,16 +693,25 @@
                     [
                       "100",
                       "20",
-                      "120"
+                      "120",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ],
                     [
                       "1000",
                       "20",
-                      "1020"
+                      "1020",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ]
                   ]
                 },
-                "Tags": []
+                "Tags": [],
+                "NativeKeyword": "Examples"
               }
             ],
             "Name": "Add two negative numbers with many examples",
@@ -2329,11 +2373,16 @@
                   "DataRows": [
                     [
                       "value",
-                      "value2"
+                      "value2",
+                      {
+                        "WasExecuted": false,
+                        "WasSuccessful": false
+                      }
                     ]
                   ]
                 },
-                "Tags": []
+                "Tags": [],
+                "NativeKeyword": "Examples"
               }
             ],
             "Name": "Sample Markdown Scenario Outline Example",
@@ -3084,7 +3133,7 @@
   },
   "Configuration": {
     "SutName": "Pickles",
-    "SutVersion": "2.13.0",
-    "GeneratedOn": "10 Februar 2017 11:00:52"
+    "SutVersion": "2.18.1",
+    "GeneratedOn": "20 April 2018 22:33:01"
   }
 }

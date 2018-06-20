@@ -27,7 +27,6 @@ using PicklesDoc.Pickles.DataStructures;
 using PicklesDoc.Pickles.DirectoryCrawler;
 using PicklesDoc.Pickles.DocumentationBuilders;
 using PicklesDoc.Pickles.ObjectModel;
-using PicklesDoc.Pickles.TestFrameworks;
 
 namespace PicklesDoc.Pickles
 {
@@ -44,7 +43,15 @@ namespace PicklesDoc.Pickles
             }
 
             var featureCrawler = container.Resolve<DirectoryTreeCrawler>();
-            Tree features = featureCrawler.Crawl(configuration.FeatureFolder);
+            var parsingReport = new ParsingReport();
+
+            Tree features = featureCrawler.Crawl(configuration.FeatureFolder, parsingReport);
+
+            if (parsingReport.Any())
+            {
+                var error = $"Some files ({parsingReport.Count}) were not parsed correctly.";
+                Log.Error(error);
+            }
 
             if (features == null)
             {
@@ -63,6 +70,11 @@ namespace PicklesDoc.Pickles
             {
                 Log.Error(ex, "Something went wrong during generation: {0}", ex);
                 throw;
+            }
+
+            if (parsingReport.Any())
+            {
+                throw new ApplicationException("Some files were not parsed correctly.");
             }
         }
 
@@ -105,13 +117,15 @@ namespace PicklesDoc.Pickles
 
                 if (scenarioOutline != null)
                 {
-                    foreach (var example in scenarioOutline.Examples.SelectMany(e => e.TableArgument.DataRows))
+                    foreach (var example in scenarioOutline.Examples.SelectMany(e => e.TableArgument.DataRows).Cast<TableRowWithTestResult>())
                     {
-                        example.Result = testResults.GetExampleResult(scenarioOutline, example.Cells.ToArray());
+                        if(example!=null)
+                            example.Result = testResults.GetExampleResult(scenarioOutline, example.Cells.ToArray());
                     }
 
                     scenarioOutline.Result =
                         scenarioOutline.Examples.SelectMany(e => e.TableArgument.DataRows)
+                        .Cast<TableRowWithTestResult>()
                             .Select(row => row.Result)
                             .Merge();
                 }

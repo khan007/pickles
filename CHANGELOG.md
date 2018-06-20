@@ -14,6 +14,115 @@ Features in Experimental are subject to change and removal without being conside
 
 This document is formatted according to the principles of [Keep A CHANGELOG](http://keepachangelog.com).
 
+## Unreleased
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [2.18.2] - 2018-04-28
+
+### Changed
+
+- Updated several external libraries
+
+### Fixed
+
+- Problem with Chocolatey Deployment
+
+## [2.18.1] - 2018-04-20
+
+### Fixed
+
+- More robust scenario outline example mapping by using code from SpecFlow ([519](https://github.com/picklesdoc/pickles/pull/519)) (by [@dirkrombauts](https://github.com/dirkrombauts), based on an idea by [@janosmagyar](https://github.com/janosmagyar))
+- Only the table of the examples in a scenario outline should have test results ([515](https://github.com/picklesdoc/pickles/pull/515)) (by [@spacehole1](https://github.com/spacehole1))
+
+## [2.18.0] - 2018-02-02
+
+### Added
+
+- Dhtml reports and Scenario outline support (includes extension of the JSON output) ([502](https://github.com/picklesdoc/pickles/pull/502)) (by [@DominikBaran](https://github.com/DominikBaran))
+
+### Fixed
+
+- Cache the NUnit feature scan results to improve performance on large solutions ([503](https://github.com/picklesdoc/pickles/pull/503)) (by [@tlecomte](https://github.com/tlecomte))
+- Use lookups in JSONDocumentation Builder to improve performance on large solutions ([504](https://github.com/picklesdoc/pickles/pull/504)) (by [@tlecomte](https://github.com/tlecomte))
+- Cache LanguageServices and GherkinDialectProvider in FeatureParser to improve performance on large solutions ([505](https://github.com/picklesdoc/pickles/pull/505)) (by [@tlecomte](https://github.com/tlecomte))
+
+## [2.17.0] - 2017-11-06
+
+### Added
+
+- Added error handling for Markdown parsing exceptions ([497](https://github.com/picklesdoc/pickles/pull/497)) (by [@joebuschmann](https://github.com/joebuschmann))
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- PowerShell Runner Shows Only First Test Result File ([485](https://github.com/picklesdoc/pickles/pull/485)) (by [@dirkrombauts](https://github.com/dirkrombauts))
+- Fixed ExcludeTags Typo In MSBuild targets ([478](https://github.com/picklesdoc/pickles/pull/478)) (by [@nachereshata](https://github.com/nachereshata))
+
+### Security
+
+## [2.16.2] - 2017-08-13
+
+### Fixed
+
+- Pickles is unable to deal with Danish characters ([477](https://github.com/picklesdoc/pickles/pull/477)) (by [@s991116](https://github.com/s991116))
+
+## [2.16.1] - 2017-08-07
+
+### Fixed
+
+- Remove unnecessary backslash conversion in json feature tree ([469](https://github.com/picklesdoc/pickles/pull/469)) (by [@AntoineTheb](https://github.com/AntoineTheb))
+- Pickles cannot deal with languages that have a hyphen in the name ([478](https://github.com/picklesdoc/pickles/pull/478)) (by [@dirkrombauts](https://github.com/dirkrombauts))
+
+
+## [2.16.0] - 2017-06-06
+
+### Added
+
+- Add handling to guess some encodings ([457](https://github.com/picklesdoc/pickles/pull/457)) (by [@s991116](https://github.com/s991116) and [@dirkrombauts](https://github.com/dirkrombauts))
+
+### Fixed
+
+- Show inconclusive results in DHTML output ([463](https://github.com/picklesdoc/pickles/pull/463)) (by [@dirkrombauts](https://github.com/dirkrombauts))
+
+### Changed
+
+- Under the hood: Move NDesk.Options dependency to command line runner ([459](https://github.com/picklesdoc/pickles/pull/459)) (by [@dirkrombauts](https://github.com/dirkrombauts))
+- Under the hood: update several third party packages ([462](https://github.com/picklesdoc/pickles/pull/462)) (by [@dirkrombauts](https://github.com/dirkrombauts))
+
+## [2.15.0] - 2017-03-09
+
+### Added
+
+- Continue loading feature files after parsing errors ([445](https://github.com/picklesdoc/pickles/pull/445)) (by [@dirkrombauts](https://github.com/dirkrombauts), based on an idea by [@pleveill](https://github.com/pleveill))
+
+### Fixed
+
+- Fix localisation of "Examples" in Scenario Outlines ([440](https://github.com/picklesdoc/pickles/pull/440)) (by [@dirkrombauts](https://github.com/dirkrombauts))
+- Make ExcludeTags available to MSBuild ([444](https://github.com/picklesdoc/pickles/pull/444)) (by [@dirkrombauts](https://github.com/dirkrombauts), based on an idea by [@pleveill](https://github.com/pleveill))
+
+## [2.14.0] - 2017-02-24
+
+### Added
+
+- Add wildcard support for test result files ([435](https://github.com/picklesdoc/pickles/pull/435)) (by [@Autom8edChaos](https://github.com/Autom8edChaos))
+- Exclude Feature or Scenario by Tag ([433](https://github.com/picklesdoc/pickles/pull/433)) (by [@Wil75](https://github.com/Wil75))
+
 ## [2.13.0] - 2017-02-10
 
 ### Added
@@ -537,7 +646,7 @@ Some things went wrong during the publication of versions 0.17.0 and 0.17.1. The
 ## [0.7.0] - 2012-08-07
 
 
-## [0.6.0] [SKIPPED]
+## [0.6.0] - [SKIPPED]
 
 
 ## [0.5.0] - 2012-03-13

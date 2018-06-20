@@ -36,25 +36,33 @@ Target "AssemblyInfo" (fun _ ->
 Target "BuildCmd" (fun _ ->
     !! "src/Pickles/Pickles.CommandLine/Pickles.CommandLine.csproj"
       |> MSBuildRelease cmdDir "Build"
-      |> Log "AppBuild-Output: "
+      |> Log "AppBuild-Output: ";
+
+      CopyFiles cmdDir [ "./LICENSE.txt"; ];
 )
 
 Target "BuildMsBuild" (fun _ ->
     !! "src/Pickles/Pickles.MsBuild/Pickles.MsBuild.csproj"
       |> MSBuildRelease msBuildDir "Build"
-      |> Log "AppBuild-Output: "
+      |> Log "AppBuild-Output: ";
+
+      CopyFiles msBuildDir [ "./LICENSE.txt"; ];
 )
 
 Target "BuildPowerShell" (fun _ ->
     !! "src/Pickles/Pickles.PowerShell/Pickles.PowerShell.csproj"
       |> MSBuildRelease powerShellDir "Build"
-      |> Log "AppBuild-Output: "
+      |> Log "AppBuild-Output: ";
+
+      CopyFiles powerShellDir [ "./LICENSE.txt"; ];
 )
 
 Target "BuildGui" (fun _ ->
     !! "src/Pickles/Pickles.UserInterface/Pickles.UserInterface.csproj"
       |> MSBuildRelease guiDir "Build"
-      |> Log "AppBuild-Output: "
+      |> Log "AppBuild-Output: ";
+
+      CopyFiles guiDir [ "./LICENSE.txt"; ];
 )
 
 Target "BuildTest" (fun _ ->
@@ -105,6 +113,12 @@ Target "BuildTest.DocumentationBuilders.Word" (fun _ ->
       |> Log "AppBuild-Output: "
 )
 
+Target "BuildTest.Runners.CommandLine" (fun _ ->
+    !! "src/Pickles/Pickles.CommandLine.UnitTests/Pickles.CommandLine.UnitTests.csproj"
+      |> MSBuildRelease testDir "Build"
+      |> Log "AppBuild-Output: "
+)
+
 let createZip (packageType : string) =
     !! (buildDir + "/" + packageType + "/*.*") -- "*.zip"
         |> Zip (buildDir + packageType) (deployDir + "Pickles-" + packageType + "-" + version + ".zip")
@@ -136,6 +150,7 @@ Target "Default" (fun _ ->
   ==> "BuildTest.DocumentationBuilders.Html"
   ==> "BuildTest.DocumentationBuilders.Json"
   ==> "BuildTest.DocumentationBuilders.Word"
+  ==> "BuildTest.Runners.CommandLine"
   ==> "Zip"
   ==> "Default"
 

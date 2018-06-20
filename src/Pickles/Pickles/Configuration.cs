@@ -34,9 +34,14 @@ namespace PicklesDoc.Pickles
         private readonly List<FileInfoBase> testResultsFiles;
 
         public Configuration()
+            : this(new LanguageServicesRegistry())
+        {
+        }
+
+        public Configuration(ILanguageServicesRegistry languageServicesRegistry)
         {
             this.testResultsFiles = new List<FileInfoBase>();
-            this.Language = LanguageServices.DefaultLanguage;
+            this.Language = languageServicesRegistry.DefaultLanguage;
         }
 
         public DirectoryInfoBase FeatureFolder { get; set; }
@@ -108,6 +113,8 @@ namespace PicklesDoc.Pickles
         }
 
         public string ExcludeTags { get; set; }
+
+        public string HideTags { get; set; }
 
         private void AddTestResultFileIfItExists(FileInfoBase fileInfoBase)
         {

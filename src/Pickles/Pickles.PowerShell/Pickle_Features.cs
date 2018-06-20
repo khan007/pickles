@@ -25,44 +25,50 @@ using System.IO.Abstractions;
 using System.Management.Automation;
 using System.Reflection;
 using Autofac;
+using PicklesDoc.Pickles.Extensions;
+using System.Linq;
 
 namespace PicklesDoc.Pickles.PowerShell
 {
     [Cmdlet("Pickle", "Features")]
     public class Pickle_Features : PSCmdlet
     {
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpFeatureDir, Mandatory = true)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpFeatureDir, Mandatory = true)]
         public string FeatureDirectory { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpOutputDir, Mandatory = true)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpOutputDir, Mandatory = true)]
         public string OutputDirectory { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpLanguageFeatureFiles, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpLanguageFeatureFiles, Mandatory = false)]
         public string Language { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpTestResultsFormat, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpTestResultsFormat, Mandatory = false)]
         public string TestResultsFormat { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpTestResultsFile, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpTestResultsFile, Mandatory = false)]
         public string TestResultsFile { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpSutName, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpSutName, Mandatory = false)]
         public string SystemUnderTestName { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpSutVersion, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpSutVersion, Mandatory = false)]
         public string SystemUnderTestVersion { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpDocumentationFormat, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpDocumentationFormat, Mandatory = false)]
         public string DocumentationFormat { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpIncludeExperimentalFeatures, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpIncludeExperimentalFeatures, Mandatory = false)]
         public SwitchParameter IncludeExperimentalFeatures { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpEnableComments, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpEnableComments, Mandatory = false)]
         public string EnableComments { get; set; }
 
-        [Parameter(HelpMessage = CommandLineArgumentParser.HelpExcludeTags, Mandatory = false)]
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpExcludeTags, Mandatory = false)]
         public string ExcludeTags { get; set; }
+
+        [Parameter(HelpMessage = CommandLineArgumentHelpTexts.HelpHideTags, Mandatory = false)]
+        public string HideTags { get; set; }
+        
 
         protected override void ProcessRecord()
         {
@@ -98,7 +104,8 @@ namespace PicklesDoc.Pickles.PowerShell
 
             if (!string.IsNullOrEmpty(this.TestResultsFile))
             {
-                configuration.AddTestResultFile(fileSystem.FileInfo.FromFileName(this.TestResultsFile));
+                configuration.AddTestResultFiles(
+                    PathExtensions.GetAllFilesFromPathAndFileNameWithOptionalSemicolonsAndWildCards(this.TestResultsFile, fileSystem));
             }
 
             configuration.SystemUnderTestName = this.SystemUnderTestName;
@@ -126,6 +133,11 @@ namespace PicklesDoc.Pickles.PowerShell
             if (!string.IsNullOrEmpty(this.ExcludeTags))
             {
                 configuration.ExcludeTags = this.ExcludeTags;
+            }
+
+            if (!string.IsNullOrEmpty(this.HideTags))
+            {
+                configuration.HideTags = this.HideTags;
             }
 
             bool shouldEnableComments;

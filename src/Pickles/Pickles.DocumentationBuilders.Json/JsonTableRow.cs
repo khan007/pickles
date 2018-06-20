@@ -18,22 +18,30 @@
 //  </copyright>
 //  --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 namespace PicklesDoc.Pickles.DocumentationBuilders.Json
 {
-    public class JsonTableRow : List<string>
+    public class JsonTableRow : List<object>
     {
-        public JsonTableRow()
-        {
-        }
-
-        public JsonTableRow(params string[] cells)
+        public JsonTableRow(IEnumerable<string> cells)
         {
             AddRange(cells);
         }
-
-        public JsonTestResult Result { get; set; }
     }
+
+    public class JsonTableRowWithTestResult : JsonTableRow
+    {
+        public JsonTableRowWithTestResult(IEnumerable<string> cells, JsonTestResult result) : base(cells)
+        {
+            if (result != null)
+            {
+                this.Result = result;
+                Add(result);
+            }
+        }
+
+        public JsonTestResult Result { get; private set; }
+    }
+
 }

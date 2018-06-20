@@ -18,9 +18,8 @@
 //  </copyright>
 //  --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using System.IO;
-
+using System.Text.RegularExpressions;
 using Autofac;
 
 using NFluent;
@@ -43,7 +42,7 @@ namespace PicklesDoc.Pickles.DocumentationBuilders.Json.UnitTests.AutomationLaye
         public void IHaveThisFeatureDescription(string featureDescription)
         {
             var configuration = this.Configuration;
-            FeatureParser parser = new FeatureParser(this.FileSystem, configuration);
+            FeatureParser parser = new FeatureParser(configuration);
 
             var feature = parser.Parse(new StringReader(featureDescription));
 
@@ -66,6 +65,10 @@ namespace PicklesDoc.Pickles.DocumentationBuilders.Json.UnitTests.AutomationLaye
             var actualResult = this.FileSystem.File.ReadAllText(@"c:\output\pickledFeatures.json");
             actualResult = actualResult.Replace("{", "{{").Replace("}", "}}");
             expectedResult = expectedResult.Replace("{", "{{").Replace("}", "}}");
+
+            actualResult = Regex.Replace(actualResult, @"\s+", string.Empty);
+            expectedResult = Regex.Replace(expectedResult, @"\s+", string.Empty);
+
             Check.That(actualResult).Contains(expectedResult);
         }
     }

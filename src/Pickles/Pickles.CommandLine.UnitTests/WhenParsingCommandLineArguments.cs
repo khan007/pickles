@@ -24,11 +24,11 @@ using System.Reflection;
 using NFluent;
 using NUnit.Framework;
 using PicklesDoc.Pickles.Extensions;
-
+using PicklesDoc.Pickles.Test;
 using StringWriter = System.IO.StringWriter;
 using TextWriter = System.IO.TextWriter;
 
-namespace PicklesDoc.Pickles.Test
+namespace PicklesDoc.Pickles.CommandLine.UnitTests
 {
     [TestFixture]
     public class WhenParsingCommandLineArguments : BaseFixture
@@ -58,6 +58,11 @@ namespace PicklesDoc.Pickles.Test
             Environment.NewLine);
 
         private static readonly string ExpectedVersionString = string.Format(@"Pickles version {0}", Assembly.GetExecutingAssembly().GetName().Version);
+
+        public WhenParsingCommandLineArguments()
+            : base(Assembly.GetExecutingAssembly().Location)
+        {
+        }
 
         [Test]
         public void ThenCanParseExcelDocumentationFormatWithLongFormSuccessfully()
@@ -178,8 +183,9 @@ namespace PicklesDoc.Pickles.Test
 
             Check.That(shouldContinue).IsTrue();
             Check.That(configuration.HasTestResults).IsTrue();
-            Check.That(configuration.TestResultsFiles.First().FullName).IsEqualTo(@"c:\results1.xml");
-            Check.That(configuration.TestResultsFiles.Skip(1).First().FullName).IsEqualTo(@"c:\results2.xml");
+            Check.That(configuration.TestResultsFiles
+                 .Select(trf => trf.FullName))
+                 .ContainsExactly(@"c:\results1.xml", @"c:\results2.xml");
         }
 
         [Test]
@@ -211,8 +217,9 @@ namespace PicklesDoc.Pickles.Test
 
             Check.That(shouldContinue).IsTrue();
             Check.That(configuration.HasTestResults).IsTrue();
-            Check.That(configuration.TestResultsFiles.Count()).IsEqualTo(1);
-            Check.That(configuration.TestResultsFiles.First().FullName).IsEqualTo(@"c:\results1.xml");
+            Check.That(configuration.TestResultsFiles
+                .Select(trf => trf.FullName))
+                .ContainsExactly(@"c:\results1.xml");
         }
 
         [Test]
@@ -227,8 +234,115 @@ namespace PicklesDoc.Pickles.Test
 
             Check.That(shouldContinue).IsTrue();
             Check.That(configuration.HasTestResults).IsTrue();
-            Check.That(configuration.TestResultsFiles.Count()).IsEqualTo(1);
-            Check.That(configuration.TestResultsFiles.First().FullName).IsEqualTo(@"c:\results1.xml");
+            Check.That(configuration.TestResultsFiles
+                .Select(trf => trf.FullName))
+                .ContainsExactly(@"c:\results1.xml");
+        }
+
+        [Test]
+        public void ThenCanParseMultipleResultsFilesWithWildCard()
+        {
+            FileSystem.AddFile(@"c:\results1.xml", "<xml />");
+            FileSystem.AddFile(@"c:\results2.xml", "<xml />");
+            var args = new[] { @"-link-results-file=c:\results*.xml" };
+
+            var configuration = new Configuration();
+            var commandLineArgumentParser = new CommandLineArgumentParser(FileSystem);
+            bool shouldContinue = commandLineArgumentParser.Parse(args, configuration, TextWriter.Null);
+
+            Check.That(shouldContinue).IsTrue();
+            Check.That(configuration.HasTestResults).IsTrue();
+            Check.That(configuration.TestResultsFiles
+                .Select(trf => trf.FullName))
+                .ContainsExactly(@"c:\results1.xml", @"c:\results2.xml");
+        }
+
+        [Test]
+        public void ThenCanParseMultipleResultsFilesWithWildCardWhereNoMatchIsExcluded()
+        {
+            FileSystem.AddFile(@"c:\results1.xml", "<xml />");
+            FileSystem.AddFile(@"c:\results2.xml", "<xml />");
+            FileSystem.AddFile(@"c:\nomatch_results3.xml", "<xml />");
+            var args = new[] { @"-link-results-file=c:\results*.xml" };
+
+            var configuration = new Configuration();
+            var commandLineArgumentParser = new CommandLineArgumentParser(FileSystem);
+            bool shouldContinue = commandLineArgumentParser.Parse(args, configuration, TextWriter.Null);
+
+            Check.That(shouldContinue).IsTrue();
+            Check.That(configuration.HasTestResults).IsTrue();
+            Check.That(configuration.TestResultsFiles
+                 .Select(trf => trf.FullName))
+                 .ContainsExactly(@"c:\results1.xml", @"c:\results2.xml");
+        }
+
+        [Test]
+        public void ThenCanParseMultipleResultsFilesWithWildCardAndSemicolon()
+        {
+            FileSystem.AddFile(@"c:\results_foo1.xml", "<xml />");
+            FileSystem.AddFile(@"c:\results_foo2.xml", "<xml />");
+            FileSystem.AddFile(@"c:\results_bar.xml", "<xml />");
+            var args = new[] { @"-link-results-file=c:\results_foo*.xml;c:\results_bar.xml" };
+
+            var configuration = new Configuration();
+            var commandLineArgumentParser = new CommandLineArgumentParser(FileSystem);
+            bool shouldContinue = commandLineArgumentParser.Parse(args, configuration, TextWriter.Null);
+
+            Check.That(shouldContinue).IsTrue();
+            Check.That(configuration.HasTestResults).IsTrue();
+            Check.That(configuration.TestResultsFiles
+                .Select(trf => trf.FullName))
+                .ContainsExactly(@"c:\results_foo1.xml", @"c:\results_foo2.xml", @"c:\results_bar.xml");
+        }
+
+        [Test]
+        public void ThenCanParseMultipleResultsFilesWithWildCardsAndSemicolonWhenSomeHaveNoMatch()
+        {
+            FileSystem.AddFile(@"c:\results_foo1.xml", "<xml />");
+            FileSystem.AddFile(@"c:\results_foo2.xml", "<xml />");
+            var args = new[] { @"-link-results-file=c:\results_foo*.xml;c:\results_bar*.xml" };
+
+            var configuration = new Configuration();
+            var commandLineArgumentParser = new CommandLineArgumentParser(FileSystem);
+            bool shouldContinue = commandLineArgumentParser.Parse(args, configuration, TextWriter.Null);
+
+            Check.That(shouldContinue).IsTrue();
+            Check.That(configuration.HasTestResults).IsTrue();
+            Check.That(configuration.TestResultsFiles
+                .Select(trf => trf.FullName))
+                .ContainsExactly(@"c:\results_foo1.xml", @"c:\results_foo2.xml");
+        }
+
+        [Test]
+        public void ThenNoExceptionIsThrownWhenResultsFileIsDir()
+        {
+            FileSystem.AddFile(@"c:\temp\results_foo1.xml", "<xml />");
+            FileSystem.AddFile(@"c:\temp\results_foo2.xml", "<xml />");
+            var args = new[] { @"-link-results-file=c:\temp\" };
+
+            var configuration = new Configuration();
+            var commandLineArgumentParser = new CommandLineArgumentParser(FileSystem);
+            bool shouldContinue = commandLineArgumentParser.Parse(args, configuration, TextWriter.Null);
+
+            Check.That(shouldContinue).IsTrue();
+            Check.That(configuration.HasTestResults).IsFalse();
+        }
+
+        [Test]
+        public void ThenCanParseResultsFilesWithMultipleMatchesResolvingInSingleMatch()
+        {
+            FileSystem.AddFile(@"c:\results_foo.xml", "<xml />");
+            var args = new[] { @"-link-results-file=c:\results*.xml;c:\*foo.xml" };
+
+            var configuration = new Configuration();
+            var commandLineArgumentParser = new CommandLineArgumentParser(FileSystem);
+            bool shouldContinue = commandLineArgumentParser.Parse(args, configuration, TextWriter.Null);
+
+            Check.That(shouldContinue).IsTrue();
+            Check.That(configuration.HasTestResults).IsTrue();
+            Check.That(configuration.TestResultsFiles
+                .Select(trf => trf.FullName))
+                .ContainsExactly(@"c:\results_foo.xml");
         }
 
         [Test]
@@ -465,6 +579,7 @@ namespace PicklesDoc.Pickles.Test
         [Test]
         public void ThenCanFilterOutNonExistingTestResultFiles()
         {
+            FileSystem.AddDirectory(@"c:\");
             var args = new[] { @"-link-results-file=c:\DoesNotExist.xml;" };
 
             var configuration = new Configuration();
@@ -499,6 +614,12 @@ namespace PicklesDoc.Pickles.Test
 
             Check.That(shouldContinue).IsTrue();
             Check.That(configuration.ExcludeTags).IsEqualTo("exclude-tag");
+        }
+
+        [Test]
+        public void Two_Plus_Two_Equals_Five()
+        {
+            //Check.That(2 + 2).Equals(5);
         }
     }
 }
